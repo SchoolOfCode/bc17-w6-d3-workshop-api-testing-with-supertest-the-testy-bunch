@@ -5,8 +5,8 @@ import { resetUsersTable } from "../db/helpers.js";
 import { seedData } from "../db/seed-data.js";
 
 
-beforeEach(() => {
-  resetUsersTable(seedData) 
+beforeEach( async() => {
+  await resetUsersTable(seedData) 
 });
 
 
@@ -37,3 +37,20 @@ test("Users route should be functional", async () => {
 });
 
 //we first checked if payload is actually an Array  expect(Array.isArray(result.body.payload)).toBe(true)
+
+test("Check if the response for a single user is correct", async () => {
+	let r = await request(app).get("/api/users/13");
+	let b =  r.body;
+
+	expect(r.statusCode).toBe(200);
+
+	expect(b.success).toBe(true);
+
+	expect(b.payload.id).toBe(13);
+
+	expect(b.payload.username).toBe("Richard");
+
+	expect(r.headers["content-type"]).toBe(
+    "application/json; charset=utf-8"
+  );
+})
